@@ -49,6 +49,15 @@ const getAll = async () => {
     }
 }
 
+const getAllByCategory = async (cat) => {
+    try {
+        const objetos = await Product.find({ categoria: cat })
+        return objetos;
+    } catch {
+        return { error: "error buscando en coleccion" };
+    }
+}
+
 const deleteById = async (id) => {
     try {
         const validUserId = mongoose.isValidObjectId(id);
@@ -73,4 +82,4 @@ const deleteAll = async () => {
 }
 
 
-export { save, saveById, getById, getAll, deleteById, deleteAll }
+export { save, saveById, getById, getAll, getAllByCategory, deleteById, deleteAll }

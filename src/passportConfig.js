@@ -3,17 +3,11 @@ import { User } from './models/index.model.js'
 import { UserDao } from './daos/index.dao.js'
 import { UserDto } from './dtos/index.dto.js'
 import bcrypt from 'bcrypt'
-import logger from './logs/logger.js'
+import dotenv from 'dotenv';
 import passportLocal from 'passport-local'
 import sendMailEthereal from './nodemailerConfig.js'
 
-// reveer para passport jwt
-
-
-
-
-
-
+dotenv.config();
 
 const LocalStrategy = passportLocal.Strategy
 
@@ -65,12 +59,12 @@ function initialize(passport) {
             `
 
             /* enviar correo de nuevo registro a cuenta admin (ethereal) */
-            sendMail("duncan.huels@ethereal.email", "Nuevo Registro", html)
+            sendMailEthereal(process.env.ETHEREALMAIL, "Nuevo Registro", html)
 
             req.session.user = new UserDto({ name: user.name, email: user.email, address: user.address, age: user.age, avatar: user.avatar, phone: user.phone, role: user.role, id: user._id, cartId: cart._id });
             return done(null, null, { status: "ok", message: "Usuario registrado exitosamente", user: new UserDto({ name: user.name, email: user.email, address: user.address, age: user.age, avatar: user.avatar, phone: user.phone, role: user.role, id: user._id, cartId: cart._id }) })
         } catch (e) {
-            logger.error("error en registro: ", e)
+            console.log("error en registro: ", e)
             done(null, newUser, { error: true, message: "error en registro" })
         }
     })
@@ -89,7 +83,7 @@ function initialize(passport) {
             req.session.user = new UserDto({ name: user.name, email: user.email, address: user.address, age: user.age, avatar: user.avatar, phone: user.phone, role: user.role, id: user._id, cartId: user.cartId });
             return done(null, user, { status: 'ok', user: new UserDto({ name: user.name, email: user.email, address: user.address, age: user.age, avatar: user.avatar, phone: user.phone, role: user.role, id: user._id, cartId: user.cartId }) })
         } catch (e) {
-            console.error("error login: ", e)
+            console.log("error login: ", e)
             return done(null, null, { error: true, message: "error login" })
         }
     })

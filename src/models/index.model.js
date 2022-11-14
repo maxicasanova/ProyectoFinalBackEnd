@@ -1,5 +1,7 @@
-import { Cart } from "./apiCart.model.js";
-import { Product } from "./apiProduct.model.js";
-import { User } from "./apiUser.model.js";
+import { Cart } from "./cart.model.js";
+import { Chat } from "./chat.model.js";
+import { Order } from "./order.model.js";
+import { Product } from "./product.model.js";
+import { User } from "./user.model.js";
 
-export { Cart, Product, User }
+export { Cart, Chat, Product, Order, User }

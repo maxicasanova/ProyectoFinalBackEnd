@@ -1,22 +1,22 @@
 import path, { dirname } from 'path';
 
-import { Server as IOServer } from 'socket.io'
-import MongoStore from 'connect-mongo'
-import cluster from 'cluster'
-import compression from "compression"
-import config from './config.js'
-import cookieParser from "cookie-parser"
-import cors from 'cors'
-import express from "express"
+import { Server as IOServer } from 'socket.io';
+import MongoStore from 'connect-mongo';
+import { chatController } from './controllers/index.controller.js'
+import cluster from 'cluster';
+import compression from "compression";
+import config from './config.js';
+import cookieParser from "cookie-parser";
+import cors from 'cors';
+import {engine} from 'express-handlebars';
+import express from "express";
 import { fileURLToPath } from 'url';
-import initializePassportConfig from './passportConfig.js'
-import mongoose from "mongoose"
-import os from 'os'
-import passport from "passport"
-import router from './routes/index.routes.js'
-import session from "express-session"
-
-// import { chatController } from './controllers/index.controller.js'
+import initializePassportConfig from './passportConfig.js';
+import mongoose from "mongoose";
+import os from 'os';
+import passport from "passport";
+import router from './routes/index.routes.js';
+import session from "express-session";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -40,7 +40,19 @@ if (config.mode === "cluster" && cluster.isPrimary) {
     }))
 
     /* serve static files */
-    app.use("/public", express.static(path.join(__dirname, "../public")))
+    // app.use("/public", express.static(path.join(__dirname, "../public")))
+
+    /*view engine */
+
+    app.set('view engine', 'hbs');
+    app.set('views', path.join(__dirname, './views'));
+
+    app.engine('hbs', engine({
+        extname: '.hbs',
+        defaultLayout: path.join(__dirname, './views/layout/main.hbs'),
+        layoutsDir: path.join(__dirname,'views/layout'),
+        partialDir: path.join(__dirname, './views/partials')
+    }));
 
     /* post url encode */
     app.use(express.json())
@@ -79,7 +91,7 @@ if (config.mode === "cluster" && cluster.isPrimary) {
     })
 
     /* routes main */
-    app.use("/api", router)
+    app.use("/", router)
 
     /* not found */
     app.use((req, res) => {
@@ -88,12 +100,13 @@ if (config.mode === "cluster" && cluster.isPrimary) {
 
     // error handler
     app.use(function (err, req, res, next) {
-        res.status(500).json({
-            error: err.message,
-        });
+        // res.status(500).json({
+        //     error: err.message,
+        // });
+        res.render('error', err);
     });
 
-    /* connect db */
+    /* db connection */
     mongoose.connect(config.mongoconnect).then(() => {
         console.log("Conexión establecida con Mongo");
 
@@ -126,19 +139,15 @@ if (config.mode === "cluster" && cluster.isPrimary) {
         io.on("connection", async socket => {
             console.log("Nuevo usuario conectado")
 
-            const mensajes = await chatController.getAllChats();
+            const messagesArray = await chatController.getAllChats().data;
 
-            /* normalizo los mensajes del array antes de mandar al front. */
-            const normalizedMensajes = mensajes.data/* normalizeMensajes(mensajes.data) */;
+            socket.emit('server:messages', messagesArray);
 
-            socket.on("client:logged", async()=>{
-                socket.emit("server:mensajes", { mensajes: normalizedMensajes })
-            })
-
-            socket.on("client:mensaje", async mensajeEnvio => {
-                const savedMessage = await chatController.saveChat(mensajeEnvio);
-                io.emit("server:mensaje", savedMessage.data);
+            socket.on('client:message', async messageInfo => {
+                await chatController.saveChat(messageInfo);
+                const messagesArray = await chatController.getAllChats().data;
+                io.emit('server:messages', messagesArray);
             })
         })
-    }).catch(error => console.log("error conectado a db: ", error));
+    }).catch(error => console.log("error conectando a db: ", error));
 }

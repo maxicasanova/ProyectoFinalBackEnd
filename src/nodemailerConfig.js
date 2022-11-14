@@ -1,9 +1,9 @@
-import { createTransport } from 'nodemailer'
-import dontenv from 'dotenv'
+import { createTransport } from 'nodemailer';
+import dontenv from 'dotenv';
 
-dontenv.config()
+dontenv.config();
 
-/* send con ethereal */
+/* send with ethereal */
 async function sendMailEthereal(to, subject, html) {
     const ADMIN_MAIL = process.env.ETHEREALMAIL
 
@@ -14,19 +14,19 @@ async function sendMailEthereal(to, subject, html) {
             user: ADMIN_MAIL,
             pass: process.env.ETHEREALPASS
         }
-    })
+    });
 
     const mailOptions = {
         from: "Servidor Node",
         to: to,
         subject: subject,
         html: html,
-    }
+    };
 
     try{
-        await transporter.sendMail(mailOptions)
+        await transporter.sendMail(mailOptions);
     } catch(e){
-        console.log(e)
+        console.log(e);
     }
 }
 
