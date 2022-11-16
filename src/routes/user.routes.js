@@ -10,13 +10,22 @@ const userRouter = express.Router();
 const {getLogged, logout, login, register} = userController;
 
 /* routing */
-userRouter.get("/logged", checkAuth, getLogged)
 
-userRouter.get("/logout", logout)
+userRouter.get("/logged", checkAuth, getLogged);
 
-userRouter.post("/login", login)
+userRouter.get("/logout", logout);
 
-userRouter.post("/register", upload.single("avatar"), register)
+userRouter.post("/login", login);
+
+userRouter.get("/login", (req, res) => res.render('login', {}));
+
+userRouter.post("/register", upload.single("avatar"), register);
+
+userRouter.get('/register', (req, res) => { res.render('register', {}) });
+
+userRouter.get('/faillogin', (req, res) => { res.render('faillogin', {}) });
+
+userRouter.get('/failsignup', (req, res) => { res.render('failsignup', {}) });
 
 
 export default userRouter;

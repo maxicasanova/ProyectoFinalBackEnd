@@ -14,13 +14,13 @@ const getLogged = (req, res) => {
 const logout = (req, res) => {
     const user = req.session.user;
     req.session.destroy((err) => {
-        err ? res.json(new Response({ status: "logout error", error: err }, "logout error", true, err)) : res.json(new Response({ status: "ok", user: new UserDto(user) }, "success logging out"));
+        err ? res.json(new Response({ status: "logout error", error: err }, "logout error", true, err)) : res.render('logout', {user});
         return;
     })
 }
 
 const login = (req, res) => {
-    passport.authenticate('login', (err, user, info) => {
+    passport.authenticate('login', {failureRedirect:'/user/faillogin'}, (err, user, info) => {
         res.json(new Response(info, "login auth"))
     })(req, res)
 }
@@ -30,7 +30,7 @@ const register = (req, res) => {
     if (!file) {
         return res.json(new Response({ error: "please upload a profile pic" }, "error: please upload a profile pic", true, 400))
     }
-    passport.authenticate('register', (err, user, info) => {
+    passport.authenticate('register', {failureRedirect:'/failsignup'}, (err, user, info) => {
         res.json(new Response(info, "register auth"))
     })(req, res)
 }

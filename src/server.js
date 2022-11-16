@@ -39,51 +39,49 @@ if (config.mode === "cluster" && cluster.isPrimary) {
         credentials: true,
     }))
 
-    /* serve static files */
-    // app.use("/public", express.static(path.join(__dirname, "../public")))
-
+    
     /*view engine */
-
+    
     app.set('view engine', 'hbs');
     app.set('views', path.join(__dirname, './views'));
-
+    
     app.engine('hbs', engine({
         extname: '.hbs',
         defaultLayout: path.join(__dirname, './views/layout/main.hbs'),
         layoutsDir: path.join(__dirname,'views/layout'),
         partialDir: path.join(__dirname, './views/partials')
     }));
-
+    
     /* post url encode */
     app.use(express.json())
     app.use(express.urlencoded({ extended: true }))
-
+    
     /* compression */
     app.use(compression())
-
+    
     /* cookies / session */
     const mongoStoreOptions = { useNewUrlParser: true, useUnifiedTopology: true };
     app.use(cookieParser())
     app.use(session({
         store: MongoStore.create({
             mongoUrl:
-                config.mongoconnect,
+            config.mongoconnect,
             mongoStoreOptions,
         }),
         secret: config.sessionsecret,
         resave: true,
         saveUninitialized: true,
         cookie: {
-            maxAge: 24 * 60 * 60 * 1000 // 24 hours
+            maxAge: 120000
         },
         rolling: true
     }))
-
+    
     /* passport init */
     app.use(passport.initialize())
     app.use(passport.session())
     initializePassportConfig(passport)
-
+    
     /* all routes - log method */
     app.use((req, res, next) => {
         console.log(`New request: ${req.method} - ${req.path}`)
@@ -100,9 +98,6 @@ if (config.mode === "cluster" && cluster.isPrimary) {
 
     // error handler
     app.use(function (err, req, res, next) {
-        // res.status(500).json({
-        //     error: err.message,
-        // });
         res.render('error', err);
     });
 

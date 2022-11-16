@@ -1,19 +1,18 @@
+import { chatController } from "../controllers/index.controller.js";
 import { checkAuth } from "../middlewares/checkAuth.js";
 import dotenv from 'dotenv';
 import express from "express";
 
-// import { userController } from "../controllers/index.controller.js"; 
-
-// cambiar por chat router
-
 dotenv.config();
+
 const chatRouter = express.Router();
 
-// const {getLogged, logout, login, register} = userController;
+const { getAllChats, getChatsByMail} = chatController;
 
 /* routing */
-// chatRouter.get("/", checkAuth, getLogged)
 
-// chatRouter.get("/:email", logout)
+chatRouter.get("/", checkAuth, getAllChats)
+
+chatRouter.get("/:email", checkAuth, getChatsByMail)
 
 export default chatRouter;

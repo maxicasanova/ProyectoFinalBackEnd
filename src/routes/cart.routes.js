@@ -11,7 +11,7 @@ const cartRouter = express.Router();
 cartRouter.post("/", checkAuth, postCart)
 cartRouter.delete("/empty/:id", checkAuth, emptyCartById)
 cartRouter.delete("/:id", checkAuthAdmin, deleteCartById)
-cartRouter.get("/", checkAuth, getAllCarts)
+cartRouter.get("/", checkAuthAdmin, getAllCarts)
 cartRouter.get("/:id/productos", checkAuth, getAllProductsByCartId)
 cartRouter.post("/:id/productos/:id_prod", checkAuth, postProductByCartId)
 cartRouter.delete("/:id/productos/:id_prod", checkAuth, deleteProductByCartId)

@@ -9,7 +9,7 @@ import userRouter from "./user.routes.js";
 const router = Router();
 
 router.use("/user", userRouter);
-router.use("/productos", productRouter);
+router.use("/products", productRouter);
 router.use("/cart", cartRouter);
 router.use("/chat", chatRouter);
 router.use("/serverinfo", serverinfoRouter);

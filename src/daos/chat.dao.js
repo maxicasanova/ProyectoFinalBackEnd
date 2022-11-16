@@ -22,4 +22,14 @@ const getAll = async () => {
     }
 }
 
-export { save, getAll }
+const getAllByMail = async (mail) => {
+    try {
+        const mensajes = await Chat.find({ mail: mail }, { __v: 0 })
+        return mensajes;
+    } catch (err) {
+        console.log("Error retrieving chat. Code: ", err);
+        return false;
+    }
+}
+
+export { save, getAll, getAllByMail }
