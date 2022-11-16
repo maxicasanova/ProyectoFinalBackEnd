@@ -35,7 +35,7 @@ const orderPost = async (req, res) => {
         </div>
         <div>
             <h3 style="color: navy">PRODUCTOS</h3>
-            <div>${JSON.stringify(order.order.productos)}</div>
+            <div>${JSON.stringify(order.order.products)}</div>
             <h3 style="color: navy">TOTAL</h3>
             <div>${order.order.totalItems} items - $${order.order.total}</div>
         </div>

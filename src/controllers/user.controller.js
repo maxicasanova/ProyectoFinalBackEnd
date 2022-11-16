@@ -20,8 +20,12 @@ const logout = (req, res) => {
 }
 
 const login = (req, res) => {
-    passport.authenticate('login', {failureRedirect:'/user/faillogin'}, (err, user, info) => {
-        res.json(new Response(info, "login auth"))
+    passport.authenticate('login', (err, user, info) => {
+        if(info.error) {
+            res.redirect('/user/faillogin')
+        } else {
+            res.redirect('/products');
+        }
     })(req, res)
 }
 
@@ -30,8 +34,12 @@ const register = (req, res) => {
     if (!file) {
         return res.json(new Response({ error: "please upload a profile pic" }, "error: please upload a profile pic", true, 400))
     }
-    passport.authenticate('register', {failureRedirect:'/failsignup'}, (err, user, info) => {
-        res.json(new Response(info, "register auth"))
+    passport.authenticate('register', (err, user, info) => {
+        if(info.error) {
+            res.redirect('/user/failsignup')
+        } else {
+            res.redirect('/products');
+        }
     })(req, res)
 }
 

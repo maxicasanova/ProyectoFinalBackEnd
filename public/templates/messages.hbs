@@ -1,0 +1,9 @@
+{{#if messagesArray.data}}
+        {{#each messagesArray.data}}
+            <span style="font-weight: 800; color:{{color}}">{{author.email}}</span>
+            <span class="text-secondary">{{updatedAt}}</span>
+            <p>{{text}}</p>
+        {{/each}}
+{{else}}
+    <p>No hay mensajes todavia.</p>
+{{/if}}

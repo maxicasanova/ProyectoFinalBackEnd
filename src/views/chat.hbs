@@ -1,0 +1,11 @@
+<div class="container d-flex justify-content-center flex-wrap">
+    {{#if chatDtos.length}}
+        {{#each chatDtos}}
+        <div class="card p-3 m-2" style="width: 18rem;">
+            {{>chatLine}}
+        </div>
+        {{/each}}
+    {{else}}
+        <p>No hay chats</p>
+    {{/if}}
+</div>

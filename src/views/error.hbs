@@ -1,7 +1,7 @@
 <div class="container text-center my-3">
     <div class="jumbotron" style="background-color: salmon;color: white;">
         <h1>ERROR</h1>
-        <p>{{err}}</p>
+        <p>{{error}}</p>
         <button class="btn btn-warning my-5" onclick="volver()">VOLVER</button>
     </div>
 </div>
@@ -12,7 +12,7 @@
     } 
     function volver() {
         setTimeout(()=>{
-            redireccionar('/')
+            redireccionar('/products')
         }, 1500)
     }
 </script>

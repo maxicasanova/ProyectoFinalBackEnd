@@ -1,18 +1,23 @@
+import path, { dirname } from 'path';
+
 import { chatController } from "../controllers/index.controller.js";
-import { checkAuth } from "../middlewares/checkAuth.js";
 import dotenv from 'dotenv';
 import express from "express";
+import { fileURLToPath } from 'url';
+
+const {getChatsByMail} = chatController;
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 dotenv.config();
 
 const chatRouter = express.Router();
 
-const { getAllChats, getChatsByMail} = chatController;
 
 /* routing */
 
-chatRouter.get("/", checkAuth, getAllChats)
+chatRouter.use("/", express.static(path.join(__dirname, '../../public')))
 
-chatRouter.get("/:email", checkAuth, getChatsByMail)
+chatRouter.get("/:email", getChatsByMail)
 
 export default chatRouter;

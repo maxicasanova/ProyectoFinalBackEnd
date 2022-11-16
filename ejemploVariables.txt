@@ -1,0 +1,5 @@
+DATABASE=MONGO
+SESSIONSECRET=coderhouse
+MONGOCONNECT=mongodb+srv://maxicasanova:maxi1234@cluster0.3hphm.mongodb.net/ecommerce?retryWrites=true&w=majority
+ETHEREALMAIL=tiffany.boyer2@ethereal.email
+ETHEREALPASS=nchZ343pctnxx4X9gB

@@ -87,10 +87,10 @@ if (config.mode === "cluster" && cluster.isPrimary) {
         console.log(`New request: ${req.method} - ${req.path}`)
         next()
     })
-
+    
     /* routes main */
     app.use("/", router)
-
+    
     /* not found */
     app.use((req, res) => {
         res.status(404).json({ error: -2, descripcion: `Ruta '${req.path}' Método '${req.method}' - No Implementada` });
@@ -98,9 +98,9 @@ if (config.mode === "cluster" && cluster.isPrimary) {
 
     // error handler
     app.use(function (err, req, res, next) {
-        res.render('error', err);
+        res.render('error', {err});
     });
-
+    
     /* db connection */
     mongoose.connect(config.mongoconnect).then(() => {
         console.log("Conexión establecida con Mongo");
@@ -134,13 +134,13 @@ if (config.mode === "cluster" && cluster.isPrimary) {
         io.on("connection", async socket => {
             console.log("Nuevo usuario conectado")
 
-            const messagesArray = await chatController.getAllChats().data;
+            const messagesArray = await chatController.getAllChats();
 
             socket.emit('server:messages', messagesArray);
 
             socket.on('client:message', async messageInfo => {
                 await chatController.saveChat(messageInfo);
-                const messagesArray = await chatController.getAllChats().data;
+                const messagesArray = await chatController.getAllChats();
                 io.emit('server:messages', messagesArray);
             })
         })
